@@ -1,21 +1,21 @@
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\ECommerceApplicationTests.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\OrderControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\OrderServiceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\CartServiceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\HomeControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\UserControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\CartControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AuthControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\CartItemSrviceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AdminOrderControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\CartItemControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\RatingControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\UserProductControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\ProductServiceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\ReviewControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\RatingServiceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\ReviewServiceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\UserServiceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AdminProductControllerTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\OrderItemServiceImplementationTest.java
-C:\Users\rohith.d\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AdminUserControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\CartItemControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\CartItemSrviceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AdminOrderControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\ReviewServiceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AuthControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\RatingServiceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\CartServiceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\CartControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\ReviewControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\UserProductControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\OrderServiceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\OrderControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AdminUserControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\OrderItemServiceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\ProductServiceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\service\UserServiceImplementationTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\AdminProductControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\HomeControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\UserControllerTest.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\ECommerceApplicationTests.java
+C:\Vs projects\Online-Jewellery-Shop\Online-Jeweller-Shop-Backend\src\test\java\com\jewelleryshop\controller\RatingControllerTest.java
