@@ -51,7 +51,7 @@ public class AppConfig {
                 return cfg;
             }
         }))
-        .httpBasic(Customizer.withDefaults()); // This is the correct approach
+        .httpBasic(Customizer.withDefaults());
     
     return http.build();
 }

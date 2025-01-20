@@ -1,6 +1,7 @@
 package com.jewelleryshop.controller;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,15 +43,13 @@ public class PaymentController {
 	    @Value("${razorpay.api.secret}")
 	    private String apiSecret;
 	
+	@Autowired
 	private OrderService orderService;
+	@Autowired
 	private UserService userService;
+	@Autowired
 	private OrderRepository orderRepository;
 	
-	public PaymentController(OrderService orderService,UserService userService,OrderRepository orderRepository) {
-		this.orderService=orderService;
-		this.userService=userService;
-		this.orderRepository=orderRepository;
-	}
 	
 	@PostMapping("/payments/{orderId}")
 	public ResponseEntity<PaymentLinkResponse>createPaymentLink(@PathVariable Long orderId,

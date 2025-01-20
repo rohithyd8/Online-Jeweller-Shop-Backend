@@ -12,19 +12,13 @@ import com.jewelleryshop.user.domain.UserRole;
 @Component
 public class DataInitializationComponent implements CommandLineRunner {
 
-    private final UserRepository userRepository;
-
+	private final UserRepository userRepository = null;
+	@Autowired
     private CartService cartService;
+	@Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public DataInitializationComponent(UserRepository userRepository,
-                                       PasswordEncoder passwordEncoder,
-                                       CartService cartService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder=passwordEncoder;
-        this.cartService=cartService;
-    }
+
 
     @Override
     public void run(String... args) {
