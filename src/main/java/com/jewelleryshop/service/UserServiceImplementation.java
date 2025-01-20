@@ -3,6 +3,7 @@ package com.jewelleryshop.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jewelleryshop.config.JwtTokenProvider;
@@ -13,15 +14,11 @@ import com.jewelleryshop.repository.UserRepository;
 @Service
 public class UserServiceImplementation implements UserService {
 	
+	@Autowired
 	private UserRepository userRepository;
+	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	
-	public UserServiceImplementation(UserRepository userRepository,JwtTokenProvider jwtTokenProvider) {
-		
-		this.userRepository=userRepository;
-		this.jwtTokenProvider=jwtTokenProvider;
-		
-	}
 
 	@Override
 	public User findUserById(Long userId) throws UserException {
