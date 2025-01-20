@@ -1,8 +1,12 @@
 package com.jewelleryshop.request;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class LoginRequest {
 	
+	@Autowired
 	private String email;
+	@Autowired
 	private String password;
 	
 	

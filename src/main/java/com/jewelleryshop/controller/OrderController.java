@@ -2,6 +2,7 @@ package com.jewelleryshop.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +26,10 @@ import com.jewelleryshop.service.UserService;
 @RequestMapping("/api/orders")
 public class OrderController {
 	
+	@Autowired
 	private OrderService orderService;
+	@Autowired
 	private UserService userService;
-	
-	public OrderController(OrderService orderService,UserService userService) {
-		this.orderService=orderService;
-		this.userService=userService;
-	}
 	
 	@PostMapping("/")
 	public ResponseEntity<Order> createOrderHandler(@RequestBody Address spippingAddress,

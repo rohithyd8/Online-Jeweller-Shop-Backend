@@ -1,5 +1,6 @@
 package com.jewelleryshop.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +24,10 @@ import com.jewelleryshop.service.UserService;
 @RequestMapping("/api/cart")
 public class CartController {
 	
+	@Autowired
 	private CartService cartService;
+	@Autowired
 	private UserService userService;
-	
-	public CartController(CartService cartService,UserService userService) {
-		this.cartService=cartService;
-		this.userService=userService;
-	}
 	
 	@GetMapping("/")
 	public ResponseEntity<Cart> findUserCartHandler(@RequestHeader("Authorization") String jwt) throws UserException{

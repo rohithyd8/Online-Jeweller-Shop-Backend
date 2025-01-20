@@ -1,5 +1,6 @@
 package com.jewelleryshop.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jewelleryshop.exception.ProductException;
@@ -13,17 +14,14 @@ import com.jewelleryshop.request.AddItemRequest;
 @Service
 public class CartServiceImplementation implements CartService{
 	
+	@Autowired
 	private CartRepository cartRepository;
+	@Autowired
 	private CartItemService cartItemService;
+	@Autowired
 	private ProductService productService;
 	
 	
-	public CartServiceImplementation(CartRepository cartRepository,CartItemService cartItemService,
-			ProductService productService) {
-		this.cartRepository=cartRepository;
-		this.productService=productService;
-		this.cartItemService=cartItemService;
-	}
 
 	@Override
 	public Cart createCart(User user) {

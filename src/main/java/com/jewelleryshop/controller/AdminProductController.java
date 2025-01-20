@@ -2,6 +2,7 @@ package com.jewelleryshop.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +24,9 @@ import com.jewelleryshop.service.ProductService;
 @RequestMapping("/api/admin/products")
 public class AdminProductController {
 	
+	@Autowired
 	private ProductService productService;
 	
-	public AdminProductController(ProductService productService) {
-		this.productService = productService;
-	}
 	
 	@PostMapping("/")
 	public ResponseEntity<Product> createProductHandler(@RequestBody CreateProductRequest req) throws ProductException{

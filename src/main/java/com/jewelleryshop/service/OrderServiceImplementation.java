@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jewelleryshop.exception.OrderException;
@@ -26,23 +27,19 @@ import com.jewelleryshop.user.domain.PaymentStatus;
 @Service
 public class OrderServiceImplementation implements OrderService {
 	
+	@Autowired
 	private OrderRepository orderRepository;
+	@Autowired
 	private CartService cartService;
+	@Autowired
 	private AddressRepository addressRepository;
+	@Autowired
 	private UserRepository userRepository;
+	@Autowired
 	private OrderItemService orderItemService;
+	@Autowired
 	private OrderItemRepository orderItemRepository;
-	
-	public OrderServiceImplementation(OrderRepository orderRepository,CartService cartService,
-			AddressRepository addressRepository,UserRepository userRepository,
-			OrderItemService orderItemService,OrderItemRepository orderItemRepository) {
-		this.orderRepository=orderRepository;
-		this.cartService=cartService;
-		this.addressRepository=addressRepository;
-		this.userRepository=userRepository;
-		this.orderItemService=orderItemService;
-		this.orderItemRepository=orderItemRepository;
-	}
+
 
 	@Override
 	public Order createOrder(User user, Address shippAddress) {

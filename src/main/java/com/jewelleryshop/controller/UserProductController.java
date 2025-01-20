@@ -3,6 +3,7 @@ package com.jewelleryshop.controller;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,9 @@ import com.jewelleryshop.user.domain.ProductSubCategory;
 @RequestMapping("/api")
 public class UserProductController {
 
+	@Autowired
 	private ProductService productService;
 
-	public UserProductController(ProductService productService) {
-		this.productService = productService;
-	}
 
 	@GetMapping("/products")
 	public ResponseEntity<Page<Product>> findProductByCategoryHandler(@RequestParam String category,

@@ -3,6 +3,7 @@ package com.jewelleryshop.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jewelleryshop.exception.ProductException;
@@ -16,15 +17,13 @@ import com.jewelleryshop.request.ReviewRequest;
 @Service
 public class ReviewServiceImplementation implements ReviewService {
 	
+	@Autowired
 	private ReviewRepository reviewRepository;
+	@Autowired
 	private ProductService productService;
+	@Autowired
 	private ProductRepository productRepository;
 	
-	public ReviewServiceImplementation(ReviewRepository reviewRepository,ProductService productService,ProductRepository productRepository) {
-		this.reviewRepository=reviewRepository;
-		this.productService=productService;
-		this.productRepository=productRepository;
-	}
 
 	@Override
 	public Review createReview(ReviewRequest req,User user) throws ProductException {

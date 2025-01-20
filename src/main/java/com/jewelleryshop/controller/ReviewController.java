@@ -2,6 +2,7 @@ package com.jewelleryshop.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +25,11 @@ import com.jewelleryshop.service.UserService;
 @RequestMapping("/api/reviews")
 public class ReviewController {
 	
+	@Autowired
 	private ReviewService reviewService;
+	@Autowired
 	private UserService userService;
 	
-	public ReviewController(ReviewService reviewService,UserService userService) {
-		this.reviewService=reviewService;
-		this.userService=userService;
-		// TODO Auto-generated constructor stub
-	}
 	@PostMapping("/create")
 	public ResponseEntity<Review> createReviewHandler(@RequestBody ReviewRequest req,@RequestHeader("Authorization") String jwt) throws UserException, ProductException{
 		User user=userService.findUserProfileByJwt(jwt);
