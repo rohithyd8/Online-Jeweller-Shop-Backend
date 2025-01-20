@@ -54,7 +54,7 @@ class AdminOrderControllerTest {
 		when(orderService.confirmedOrder(orderId)).thenReturn(order);
 
 		// Act
-		ResponseEntity<Order> response = adminOrderController.ConfirmedOrderHandler(orderId, "Bearer validJwt");
+		ResponseEntity<Order> response = adminOrderController.canceledOrderHandler(orderId, "Bearer validJwt");
 
 		// Assert
 		assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());

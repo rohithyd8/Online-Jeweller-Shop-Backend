@@ -2,6 +2,8 @@ package com.jewelleryshop.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,27 +26,46 @@ import com.jewelleryshop.service.UserService;
 @RequestMapping("/api/reviews")
 public class ReviewController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
+	
 	private ReviewService reviewService;
 	private UserService userService;
 	
-	public ReviewController(ReviewService reviewService,UserService userService) {
-		this.reviewService=reviewService;
-		this.userService=userService;
-		// TODO Auto-generated constructor stub
+	public ReviewController(ReviewService reviewService, UserService userService) {
+		this.reviewService = reviewService;
+		this.userService = userService;
 	}
+
 	@PostMapping("/create")
-	public ResponseEntity<Review> createReviewHandler(@RequestBody ReviewRequest req,@RequestHeader("Authorization") String jwt) throws UserException, ProductException{
-		User user=userService.findUserProfileByJwt(jwt);
-		System.out.println("product id "+req.getProductId()+" - "+req.getReview());
-		Review review=reviewService.createReview(req, user);
-		System.out.println("product review "+req.getReview());
-		return new ResponseEntity<Review>(review,HttpStatus.ACCEPTED);
+	public ResponseEntity<Review> createReviewHandler(@RequestBody ReviewRequest req, @RequestHeader("Authorization") String jwt) 
+			throws UserException, ProductException {
+		
+		logger.info("Received review creation request for product ID: {} from user with JWT: {}", req.getProductId(), jwt);
+
+		try {
+			User user = userService.findUserProfileByJwt(jwt);
+			logger.info("User profile retrieved: {}", user.getEmail());
+
+			// Log the review details
+			logger.info("Review being created for product ID: {} with review: {}", req.getProductId(), req.getReview());
+
+			Review review = reviewService.createReview(req, user);
+			logger.info("Review created successfully for product ID: {}", req.getProductId());
+
+			return new ResponseEntity<>(review, HttpStatus.ACCEPTED);
+		} catch (UserException | ProductException e) {
+			logger.error("Error creating review: {}", e.getMessage());
+			throw e;
+		}
 	}
 	
 	@GetMapping("/product/{productId}")
-	public ResponseEntity<List<Review>> getProductsReviewHandler(@PathVariable Long productId){
-		List<Review>reviews=reviewService.getAllReview(productId);
-		return new ResponseEntity<List<Review>>(reviews,HttpStatus.OK);
-	}
+	public ResponseEntity<List<Review>> getProductsReviewHandler(@PathVariable Long productId) {
+		logger.info("Fetching reviews for product with ID: {}", productId);
 
+		List<Review> reviews = reviewService.getAllReview(productId);
+		logger.info("Fetched {} reviews for product with ID: {}", reviews.size(), productId);
+
+		return new ResponseEntity<>(reviews, HttpStatus.OK);
+	}
 }

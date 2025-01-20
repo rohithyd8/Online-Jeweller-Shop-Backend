@@ -3,6 +3,8 @@ package com.jewelleryshop.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.jewelleryshop.config.JwtTokenProvider;
@@ -12,67 +14,73 @@ import com.jewelleryshop.repository.UserRepository;
 
 @Service
 public class UserServiceImplementation implements UserService {
-	
-	private UserRepository userRepository;
-	private JwtTokenProvider jwtTokenProvider;
-	
-	public UserServiceImplementation(UserRepository userRepository,JwtTokenProvider jwtTokenProvider) {
-		
-		this.userRepository=userRepository;
-		this.jwtTokenProvider=jwtTokenProvider;
-		
-	}
+    
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImplementation.class);
+    
+    private UserRepository userRepository;
+    private JwtTokenProvider jwtTokenProvider;
+    
+    public UserServiceImplementation(UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
+        this.userRepository = userRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
-	@Override
-	public User findUserById(Long userId) throws UserException {
-		Optional<User> user=userRepository.findById(userId);
-		
-		if(user.isPresent()){
-			return user.get();
-		}
-		throw new UserException("user not found with id "+userId);
-	}
+    @Override
+    public User findUserById(Long userId) throws UserException {
+        logger.info("Attempting to find user with ID: {}", userId);
+        
+        Optional<User> user = userRepository.findById(userId);
+        
+        if (user.isPresent()) {
+            logger.info("User found with ID: {}", userId);
+            return user.get();
+        }
+        
+        logger.error("User not found with ID: {}", userId);
+        throw new UserException("User not found with ID " + userId);
+    }
 
-	@Override
-	public User findUserProfileByJwt(String jwt) throws UserException {
-		System.out.println("user service");
-		String email=jwtTokenProvider.getEmailFromJwtToken(jwt);
-		
-		System.out.println("email"+email);
-		
-		User user=userRepository.findByEmail(email);
-		
-		if(user==null) {
-			throw new UserException("user not exist with email "+email);
-		}
-		System.out.println("email user"+user.getEmail());
-		return user;
-	}
+    @Override
+    public User findUserProfileByJwt(String jwt) throws UserException {
+        logger.info("Extracting user profile from JWT token");
+        
+        String email = jwtTokenProvider.getEmailFromJwtToken(jwt);
+        logger.info("Email extracted from JWT token: {}", email);
+        
+        User user = userRepository.findByEmail(email);
+        
+        if (user == null) {
+            logger.error("User not found with email: {}", email);
+            throw new UserException("User not exist with email " + email);
+        }
+        
+        logger.info("User found with email: {}", email);
+        return user;
+    }
 
-//	@Override
-//	public List<User> findAllCustomers() {
-//		return null;
-//	}
+    @Override
+    public List<User> findAllUsers() {
+        logger.info("Fetching all users ordered by creation date.");
+        List<User> users = userRepository.findAllByOrderByCreatedAtDesc();
+        logger.info("Fetched {} users", users.size());
+        return users;
+    }
 
-	@Override
-	public List<User> findAllUsers() {
-		// TODO Auto-generated method stub
-		return userRepository.findAllByOrderByCreatedAtDesc();
-	}
+    public User createUser(User user) {
+        logger.info("Attempting to create a new user: {}", user);
+        // You can add creation logic here
+        return null;
+    }
 
-	public User createUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public User findUserByEmail(String email) {
+        logger.info("Finding user by email: {}", email);
+        // You can add logic to find a user by email here
+        return null;
+    }
 
-	public User findUserByEmail(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public User updateUser(long l, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    public User updateUser(long userId, User user) {
+        logger.info("Attempting to update user with ID: {}", userId);
+        // You can add user update logic here
+        return null;
+    }
 }

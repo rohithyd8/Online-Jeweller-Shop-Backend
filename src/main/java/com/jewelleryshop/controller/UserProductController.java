@@ -3,6 +3,8 @@ package com.jewelleryshop.controller;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,62 +23,90 @@ import com.jewelleryshop.user.domain.ProductSubCategory;
 @RequestMapping("/api")
 public class UserProductController {
 
-	private ProductService productService;
+    private static final Logger logger = LoggerFactory.getLogger(UserProductController.class);
 
-	public UserProductController(ProductService productService) {
-		this.productService = productService;
-	}
+    private ProductService productService;
 
-	@GetMapping("/products")
-	public ResponseEntity<Page<Product>> findProductByCategoryHandler(@RequestParam String category,
-			@RequestParam List<String> color, @RequestParam List<String> size, @RequestParam Integer minPrice,
-			@RequestParam Integer maxPrice, @RequestParam Integer minDiscount, @RequestParam String sort,
-			@RequestParam String stock, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
+    public UserProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
-		Page<Product> res = productService.getAllProduct(category, color, size, minPrice, maxPrice, minDiscount, sort,
-				stock, pageNumber, pageSize);
+    @GetMapping("/products")
+    public ResponseEntity<Page<Product>> findProductByCategoryHandler(@RequestParam String category,
+            @RequestParam List<String> color, @RequestParam List<String> size, @RequestParam Integer minPrice,
+            @RequestParam Integer maxPrice, @RequestParam Integer minDiscount, @RequestParam String sort,
+            @RequestParam String stock, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
 
-		System.out.println("complete products");
-		return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+        // Log incoming request
+        logger.info("Received request to fetch products with category: {}, color: {}, size: {}, minPrice: {}, maxPrice: {}, minDiscount: {}, sort: {}, stock: {}, pageNumber: {}, pageSize: {}",
+                category, color, size, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize);
 
-	}
+        Page<Product> res = productService.getAllProduct(category, color, size, minPrice, maxPrice, minDiscount, sort,
+                stock, pageNumber, pageSize);
 
-	@GetMapping("/products/id/{productId}")
-	public ResponseEntity<Product> findProductByIdHandler(@PathVariable Long productId) throws ProductException {
+        // Log the successful retrieval of products
+        logger.info("Successfully retrieved products for category: {}", category);
 
-		Product product = productService.findProductById(productId);
+        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+    }
 
-		return new ResponseEntity<Product>(product, HttpStatus.ACCEPTED);
-	}
+    @GetMapping("/products/id/{productId}")
+    public ResponseEntity<Product> findProductByIdHandler(@PathVariable Long productId) throws ProductException {
 
-	@GetMapping("/products/search")
-	public ResponseEntity<List<Product>> searchProductHandler(@RequestParam String q) {
+        // Log request for product by ID
+        logger.info("Received request to fetch product with ID: {}", productId);
 
-		List<Product> products = productService.searchProduct(q);
+        Product product = productService.findProductById(productId);
 
-		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+        // Log the successful retrieval of product by ID
+        logger.info("Successfully retrieved product with ID: {}", productId);
 
-	}
+        return new ResponseEntity<>(product, HttpStatus.ACCEPTED);
+    }
 
-	@GetMapping("/products/related")
-	public ResponseEntity<List<Product>> getRelatedProductsHandler(@RequestParam String topLavelCategory,
-			@RequestParam String secondLavelCategory, @RequestParam String thirdLavelCategory) {
+    @GetMapping("/products/search")
+    public ResponseEntity<List<Product>> searchProductHandler(@RequestParam String q) {
 
-		// Validate parameters
-		if (topLavelCategory.isEmpty() || secondLavelCategory.isEmpty() || thirdLavelCategory.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Return 400 if any parameter is missing
-		}
+        // Log search query
+        logger.info("Received search request with query: {}", q);
 
-		// Fetch related products
-		List<Product> relatedProducts = productService.getRelatedProducts(topLavelCategory, secondLavelCategory,
-				thirdLavelCategory);
+        List<Product> products = productService.searchProduct(q);
 
-		// If no products found, return an empty list with 200 OK
-		if (relatedProducts.isEmpty()) {
-			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK); // Return empty array with 200 OK
-		}
+        // Log the number of products found
+        logger.info("Found {} products for search query: {}", products.size(), q);
 
-		return new ResponseEntity<>(relatedProducts, HttpStatus.OK); // Return 200 with the products
-	}
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 
+    @GetMapping("/products/related")
+    public ResponseEntity<List<Product>> getRelatedProductsHandler(@RequestParam String topLavelCategory,
+            @RequestParam String secondLavelCategory, @RequestParam String thirdLavelCategory) {
+
+        // Validate parameters and log the request
+        logger.info("Received request to fetch related products for categories: topLevel: {}, secondLevel: {}, thirdLevel: {}",
+                topLavelCategory, secondLavelCategory, thirdLavelCategory);
+
+        // Check for invalid parameters
+        if (topLavelCategory.isEmpty() || secondLavelCategory.isEmpty() || thirdLavelCategory.isEmpty()) {
+            logger.error("Invalid parameters, one or more categories are empty.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Return 400 if any parameter is missing
+        }
+
+        // Fetch related products
+        List<Product> relatedProducts = productService.getRelatedProducts(topLavelCategory, secondLavelCategory,
+                thirdLavelCategory);
+
+        // If no related products are found, log it and return empty list
+        if (relatedProducts.isEmpty()) {
+            logger.warn("No related products found for categories: topLevel: {}, secondLevel: {}, thirdLevel: {}",
+                    topLavelCategory, secondLavelCategory, thirdLavelCategory);
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK); // Return empty array with 200 OK
+        }
+
+        // Log successful retrieval of related products
+        logger.info("Successfully retrieved {} related products for categories: topLevel: {}, secondLevel: {}, thirdLevel: {}",
+                relatedProducts.size(), topLavelCategory, secondLavelCategory, thirdLavelCategory);
+
+        return new ResponseEntity<>(relatedProducts, HttpStatus.OK); // Return 200 with the products
+    }
 }

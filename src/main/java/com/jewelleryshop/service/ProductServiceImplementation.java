@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,178 +24,179 @@ import com.jewelleryshop.user.domain.ProductSubCategory;
 @Service
 public class ProductServiceImplementation implements ProductService {
 
-	private ProductRepository productRepository;
-	private UserService userService;
-	private CategoryRepository categoryRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImplementation.class);
 
-	public ProductServiceImplementation(ProductRepository productRepository, UserService userService,
-			CategoryRepository categoryRepository) {
-		this.productRepository = productRepository;
-		this.userService = userService;
-		this.categoryRepository = categoryRepository;
-	}
+    private ProductRepository productRepository;
+    private UserService userService;
+    private CategoryRepository categoryRepository;
 
-	@Override
-	public Product createProduct(CreateProductRequest req) {
+    public ProductServiceImplementation(ProductRepository productRepository, UserService userService,
+            CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.userService = userService;
+        this.categoryRepository = categoryRepository;
+    }
 
-		Category topLevel = categoryRepository.findByName(req.getTopLavelCategory());
+    @Override
+    public Product createProduct(CreateProductRequest req) {
+        logger.info("Creating product: {}", req.getTitle());
 
-		if (topLevel == null) {
+        Category topLevel = categoryRepository.findByName(req.getTopLavelCategory());
+        if (topLevel == null) {
+            logger.info("Top level category '{}' not found, creating new one.", req.getTopLavelCategory());
+            Category topLavelCategory = new Category();
+            topLavelCategory.setName(req.getTopLavelCategory());
+            topLavelCategory.setLevel(1);
+            topLevel = categoryRepository.save(topLavelCategory);
+        }
 
-			Category topLavelCategory = new Category();
-			topLavelCategory.setName(req.getTopLavelCategory());
-			topLavelCategory.setLevel(1);
+        Category secondLevel = categoryRepository.findByNameAndParant(req.getSecondLavelCategory(), topLevel.getName());
+        if (secondLevel == null) {
+            logger.info("Second level category '{}' not found, creating new one.", req.getSecondLavelCategory());
+            Category secondLavelCategory = new Category();
+            secondLavelCategory.setName(req.getSecondLavelCategory());
+            secondLavelCategory.setParentCategory(topLevel);
+            secondLavelCategory.setLevel(2);
+            secondLevel = categoryRepository.save(secondLavelCategory);
+        }
 
-			topLevel = categoryRepository.save(topLavelCategory);
-		}
+        Category thirdLevel = categoryRepository.findByNameAndParant(req.getThirdLavelCategory(), secondLevel.getName());
+        if (thirdLevel == null) {
+            logger.info("Third level category '{}' not found, creating new one.", req.getThirdLavelCategory());
+            Category thirdLavelCategory = new Category();
+            thirdLavelCategory.setName(req.getThirdLavelCategory());
+            thirdLavelCategory.setParentCategory(secondLevel);
+            thirdLavelCategory.setLevel(3);
+            thirdLevel = categoryRepository.save(thirdLavelCategory);
+        }
 
-		Category secondLevel = categoryRepository.findByNameAndParant(req.getSecondLavelCategory(), topLevel.getName());
-		if (secondLevel == null) {
+        Product product = new Product();
+        product.setTitle(req.getTitle());
+        product.setColor(req.getColor());
+        product.setDescription(req.getDescription());
+        product.setDiscountedPrice(req.getDiscountedPrice());
+        product.setDiscountPersent(req.getDiscountPersent());
+        product.setImageUrl(req.getImageUrl());
+        product.setBrand(req.getBrand());
+        product.setPrice(req.getPrice());
+        product.setSizes(req.getSize());
+        product.setQuantity(req.getQuantity());
+        product.setCategory(thirdLevel);
+        product.setCreatedAt(LocalDateTime.now());
 
-			Category secondLavelCategory = new Category();
-			secondLavelCategory.setName(req.getSecondLavelCategory());
-			secondLavelCategory.setParentCategory(topLevel);
-			secondLavelCategory.setLevel(2);
+        Product savedProduct = productRepository.save(product);
 
-			secondLevel = categoryRepository.save(secondLavelCategory);
-		}
+        logger.info("Product created successfully with ID: {}", savedProduct.getId());
+        return savedProduct;
+    }
 
-		Category thirdLevel = categoryRepository.findByNameAndParant(req.getThirdLavelCategory(),
-				secondLevel.getName());
-		if (thirdLevel == null) {
+    @Override
+    public String deleteProduct(Long productId) throws ProductException {
+        logger.info("Attempting to delete product with ID: {}", productId);
 
-			Category thirdLavelCategory = new Category();
-			thirdLavelCategory.setName(req.getThirdLavelCategory());
-			thirdLavelCategory.setParentCategory(secondLevel);
-			thirdLavelCategory.setLevel(3);
+        Product product = findProductById(productId);
+        logger.info("Deleting product: {}", product.getId());
 
-			thirdLevel = categoryRepository.save(thirdLavelCategory);
-		}
+        product.getSizes().clear(); // Clearing associated sizes
+        productRepository.delete(product);
 
-		Product product = new Product();
-		product.setTitle(req.getTitle());
-		product.setColor(req.getColor());
-		product.setDescription(req.getDescription());
-		product.setDiscountedPrice(req.getDiscountedPrice());
-		product.setDiscountPersent(req.getDiscountPersent());
-		product.setImageUrl(req.getImageUrl());
-		product.setBrand(req.getBrand());
-		product.setPrice(req.getPrice());
-		product.setSizes(req.getSize());
-		product.setQuantity(req.getQuantity());
-		product.setCategory(thirdLevel);
-		product.setCreatedAt(LocalDateTime.now());
+        logger.info("Product deleted successfully with ID: {}", productId);
+        return "Product deleted successfully";
+    }
 
-		Product savedProduct = productRepository.save(product);
+    @Override
+    public Product updateProduct(Long productId, Product req) throws ProductException {
+        logger.info("Updating product with ID: {}", productId);
 
-		System.out.println("products - " + product);
+        Product product = findProductById(productId);
 
-		return savedProduct;
-	}
+        if (req.getQuantity() != 0) {
+            product.setQuantity(req.getQuantity());
+            logger.info("Updated quantity for product with ID: {} to {}", productId, req.getQuantity());
+        }
+        if (req.getDescription() != null) {
+            product.setDescription(req.getDescription());
+            logger.info("Updated description for product with ID: {}", productId);
+        }
 
-	@Override
-	public String deleteProduct(Long productId) throws ProductException {
+        Product updatedProduct = productRepository.save(product);
+        logger.info("Product updated successfully with ID: {}", productId);
+        return updatedProduct;
+    }
 
-		Product product = findProductById(productId);
+    @Override
+    public List<Product> getAllProducts() {
+        logger.info("Fetching all products");
+        return productRepository.findAll();
+    }
 
-		System.out.println("delete product " + product.getId() + " - " + productId);
-		product.getSizes().clear();
-//		productRepository.save(product);
-//		product.getCategory().
-		productRepository.delete(product);
+    @Override
+    public Product findProductById(Long id) throws ProductException {
+        logger.info("Fetching product with ID: {}", id);
 
-		return "Product deleted Successfully";
-	}
+        Optional<Product> opt = productRepository.findById(id);
+        if (opt.isPresent()) {
+            logger.info("Product found with ID: {}", id);
+            return opt.get();
+        }
 
-	@Override
-	public Product updateProduct(Long productId, Product req) throws ProductException {
-		Product product = findProductById(productId);
+        logger.error("Product not found with ID: {}", id);
+        throw new ProductException("Product not found with id " + id);
+    }
 
-		if (req.getQuantity() != 0) {
-			product.setQuantity(req.getQuantity());
-		}
-		if (req.getDescription() != null) {
-			product.setDescription(req.getDescription());
-		}
+    @Override
+    public List<Product> findProductByCategory(String category) {
+        logger.info("Fetching products by category: {}", category);
+        return productRepository.findByCategory(category);
+    }
 
-		return productRepository.save(product);
-	}
+    @Override
+    public List<Product> searchProduct(String query) {
+        logger.info("Searching products with query: {}", query);
+        return productRepository.searchProduct(query);
+    }
 
-	@Override
-	public List<Product> getAllProducts() {
-		return productRepository.findAll();
-	}
+    @Override
+    public Page<Product> getAllProduct(String category, List<String> colors, List<String> sizes, Integer minPrice,
+            Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
 
-	@Override
-	public Product findProductById(Long id) throws ProductException {
-		Optional<Product> opt = productRepository.findById(id);
+        logger.info("Fetching products with filters - Category: {}, Colors: {}, Sizes: {}, Min Price: {}, Max Price: {}, Min Discount: {}, Stock: {}, Page: {} of size {}", 
+            category, colors, sizes, minPrice, maxPrice, minDiscount, stock, pageNumber, pageSize);
 
-		if (opt.isPresent()) {
-			return opt.get();
-		}
-		throw new ProductException("product not found with id " + id);
-	}
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<Product> products = productRepository.filterProducts(category, minPrice, maxPrice, minDiscount, sort);
 
-	@Override
-	public List<Product> findProductByCategory(String category) {
+        if (!colors.isEmpty()) {
+            products = products.stream().filter(p -> colors.stream().anyMatch(c -> c.equalsIgnoreCase(p.getColor())))
+                    .collect(Collectors.toList());
+        }
 
-		System.out.println("category --- " + category);
+        if (stock != null) {
+            if (stock.equals("in_stock")) {
+                products = products.stream().filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
+            } else if (stock.equals("out_of_stock")) {
+                products = products.stream().filter(p -> p.getQuantity() < 1).collect(Collectors.toList());
+            }
+        }
 
-		List<Product> products = productRepository.findByCategory(category);
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), products.size());
 
-		return products;
-	}
+        List<Product> pageContent = products.subList(startIndex, endIndex);
+        return new PageImpl<>(pageContent, pageable, products.size());
+    }
 
-	@Override
-	public List<Product> searchProduct(String query) {
-		List<Product> products = productRepository.searchProduct(query);
-		return products;
-	}
+    @Override
+    public List<Product> recentlyAddedProduct() {
+        logger.info("Fetching recently added products.");
+        return productRepository.findTop10ByOrderByCreatedAtDesc();
+    }
 
-	@Override
-	public Page<Product> getAllProduct(String category, List<String> colors, List<String> sizes, Integer minPrice,
-			Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
-
-		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-		List<Product> products = productRepository.filterProducts(category, minPrice, maxPrice, minDiscount, sort);
-
-		if (!colors.isEmpty()) {
-			products = products.stream().filter(p -> colors.stream().anyMatch(c -> c.equalsIgnoreCase(p.getColor())))
-					.collect(Collectors.toList());
-
-		}
-
-		if (stock != null) {
-
-			if (stock.equals("in_stock")) {
-				products = products.stream().filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
-			} else if (stock.equals("out_of_stock")) {
-				products = products.stream().filter(p -> p.getQuantity() < 1).collect(Collectors.toList());
-			}
-
-		}
-		int startIndex = (int) pageable.getOffset();
-		int endIndex = Math.min(startIndex + pageable.getPageSize(), products.size());
-
-		List<Product> pageContent = products.subList(startIndex, endIndex);
-		Page<Product> filteredProducts = new PageImpl<>(pageContent, pageable, products.size());
-		return filteredProducts; // If color list is empty, do nothing and return all products
-
-	}
-
-	@Override
-	public List<Product> recentlyAddedProduct() {
-
-		return productRepository.findTop10ByOrderByCreatedAtDesc();
-	}
-
-	@Override
-	public List<Product> getRelatedProducts(String topLavelCategory, String secondLavelCategory,
-			String thirdLavelCategory) {
-		System.out.println("Fetching related products for topLevelCategory: " + topLavelCategory
-				+ ", secondLevelCategory: " + secondLavelCategory + ", thirdLevelCategory: " + thirdLavelCategory);
-		return productRepository.findRelatedProducts(topLavelCategory, secondLavelCategory, thirdLavelCategory);
-	}
-
+    @Override
+    public List<Product> getRelatedProducts(String topLavelCategory, String secondLavelCategory,
+            String thirdLavelCategory) {
+        logger.info("Fetching related products for - Top Level: {}, Second Level: {}, Third Level: {}",
+            topLavelCategory, secondLavelCategory, thirdLavelCategory);
+        return productRepository.findRelatedProducts(topLavelCategory, secondLavelCategory, thirdLavelCategory);
+    }
 }
